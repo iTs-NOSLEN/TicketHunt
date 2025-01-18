@@ -1,0 +1,50 @@
+// ==UserScript==
+// @name         TicketHunt
+// @namespace    http://tampermonkey.net/
+// @version      0.3
+// @description  Hunting season has begun. Be the first person to enter the queue.
+// @author       You
+// @match        https://thepageyouwant.com/*
+// @grant        none
+// ==/UserScript==
+
+/* INSTRUCTIONS: 1. Change the url on the @match to the page you want to use the script on.
+                 2. Change the url on the 'pageURL' variable to the page you want to use the script on.
+                 3. Change the id (or class) of the button in 'buttonSelector' to the one you want to auto-click.
+                 You can check this using inspect on the button.
+*/
+
+(function() {
+    'use strict';
+
+        // Reload the page every 3 seconds
+        setInterval(function() {
+            console.log("Reloading the page...");
+            window.location.reload();
+        }, 3000);
+
+        // Prompt for the button selector
+        var buttonSelector = "#buy-button";
+
+        // Try to find and click the button immediately
+        var buyTicketButton = document.querySelector(buttonSelector);
+
+        if (buyTicketButton) {
+            console.log("Button found. Clicking...");
+            buyTicketButton.click();
+
+        } else {
+            // If the button is not available, check periodically
+            console.log("Button not found. Starting periodic check...");
+            var checkButton = setInterval(function() {
+                buyTicketButton = document.querySelector(buttonSelector);
+
+                if (buyTicketButton) {
+                    console.log("Button found. Clicking...");
+                    clearInterval(checkButton); // Stop checking once the button is found
+                    buyTicketButton.click(); // Simulate a click
+                }
+            }, 100); // Check every 100ms
+        }
+
+})();
